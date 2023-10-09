@@ -13,5 +13,24 @@
 
 
  #define macro MAIN() = takes(0) returns(0) {
-    
+    0x0 calldataload
+    0xe0 shr
+    __FUNC_SIG(makeContract) eq makeContract jumpi
+
+    0x0 0x0 revert
+
+    makeContract:
+        MAKE_CONTRACT()
  }
+
+  #define macro MAKE_CONTRACT() = takes(0) returns(0) {
+    0x600b8060093d393df3620caffe60005260205ff3
+    0x0
+    mstore 
+
+    0x14 0x0c 0x0
+    create
+
+    0x0 mstore
+    0x20 0x0 return
+  }

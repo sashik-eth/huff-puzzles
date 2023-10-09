@@ -14,5 +14,32 @@
 
 
  #define macro MAIN() = takes(0) returns(0) {
-   
+    0x0 calldataload
+    0xe0 shr
+    __FUNC_SIG(distribute) eq distribute jumpi
+
+    rev:
+        0x0 0x0 revert
+
+    distribute:
+        DISTRIBUTE()
+ }
+
+ #define macro DISTRIBUTE() = takes(0) returns(0) {
+    0x24 calldataload
+    dup1 iszero rev jumpi
+    callvalue div              
+    0x0                      
+    loop:
+        0x01
+        add
+        0x0 0x0 0x0 0x0        
+        dup6                   
+        dup6 0x20 mul          
+        0x24 add
+        calldataload
+        gas
+        call
+        pop
+        dup1 0x24 calldataload gt loop jumpi
  }
