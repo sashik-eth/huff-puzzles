@@ -14,5 +14,43 @@
 
 
 #define macro MAIN() = takes(0) returns(0) {
+    0x0 calldataload
+    0xe0 shr
+    dup1 __FUNC_SIG(getTimeElapsed) eq getTimeElapsed jumpi
+    __FUNC_SIG(getTimeUntil) eq getTimeUntil jumpi
 
+    0x0 0x0 revert
+
+    getTimeElapsed:
+        GET_TIME_ELAPSED()
+    getTimeUntil: 
+        GET_TIME_UNTIL()
+}
+
+#define macro GET_TIME_ELAPSED() = takes(0) returns(0) {
+    0x04 calldataload     // [provided_time]
+    timestamp             // [timestamp, provided_time]  
+    dup2 dup2             // [timestamp, provided_time, timestamp, provided_time]
+    lt ret0 jumpi         // [timestamp, provided_time]
+    sub                   // [time_elapsed]
+    0x0 mstore
+    0x20 0x0 return
+
+    ret0:
+        0x0 0x0 mstore
+        0x20 0x0 return
+}
+
+#define macro GET_TIME_UNTIL() = takes(0) returns(0) {
+    timestamp             // [timestamp]  
+    0x04 calldataload     // [provided_time, timestamp]
+    dup2 dup2             // [provided_time, timestamp, provided_time, timestamp]
+    lt ret0 jumpi         // [provided_time, timestamp]
+    sub                   // [time_until]
+    0x0 mstore
+    0x20 0x0 return
+
+    ret0:
+        0x0 0x0 mstore
+        0x20 0x0 return
 }
